@@ -8,4 +8,4 @@ respawn
 
 setuid selenium
 
-exec xvfb-run -a -s '-screen 0 <%= @fbsize %>' java -Djava.security.egd=file:/dev/./urandom -Xmx<%= @xmx %> -Dwebdriver.chrome.driver=<%= @chromedriver %> -jar <%= @selenium %> -role node -nodeConfig <%= @config %> -hubHost <%= @host %> -hubPort <%= @port %> >> <%= @log %> 2>&1
+exec xvfb-run -a -s '-screen 0 <%= @fbsize %>' java -Djava.security.egd=file:/dev/./urandom -Xmx<%= @xmx %> -Dwebdriver.chrome.driver=<%= @chromedriver %> -jar <%= @selenium %> -role node -nodeConfig <%= @config %> >> <%= @log %> 2>&1

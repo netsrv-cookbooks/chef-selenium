@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+# /etc/rc.d/init.d/selenium
+
+# chkconfig: 235 99 01
+# description: Selenium - the browser automation framework
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ ! -f /etc/sysconfig/selenium ]; then
+  echo "/etc/sysconfig/selenium is missing.  Did the Chef run complete properly?"
+  exit 1 
+fi
+
+. /etc/sysconfig/selenium
+
+if [ "$SELENIUM_ROLE" == "hub" ]; then
+  START_CMD="java -Xmx$SELENIUM_XMX -jar $SELENIUM_JAR -role $SELENIUM_ROLE >> $SELENIUM_LOG 2>&1 &"
+else
+  OPTS="-Djava.security.egd=file:/dev/urandom"
+  OPTS="$OPTS -Dwebdriver.chrome.driver=<%= @chromedriver %>"
+  OPTS="$OPTS -Xmx$SELENIUM_XMX"
+  OPTS="$OPTS -jar $SELENIUM_JAR -role $SELENIUM_ROLE -nodeConfig $SELENIUM_NODE_CONFIG"
+  START_CMD="xvfb-run -n 0 -s \"-screen 0 $SELENIUM_FBSIZE\""
+  START_CMD="$START_CMD java $OPTS >> $SELENIUM_LOG 2>&1 &"
+fi
+
+function start() {
+  echo -n "Starting Selenium: "
+
+  check_proc
+  if [ $? -eq 0 ]; then
+    failure "Selenium is already running"
+    echo && exit 1
+  fi
+
+  [ -d /var/run/selenium ] || (mkdir /var/run/selenium )
+  su $SELENIUM_USER -c "$START_CMD"
+
+  check_proc
+  if [ $? -eq 0 ]; then
+    success && echo
+  else
+    failure && echo && exit 1
+  fi
+}
+
+function stop() {
+  echo -n "Shutting down Selenium: "
+  check_proc
+  if [ $? -eq 0 ]; then
+    pkill -u $SELENIUM_USER -f $SELENIUM_JAR
+    until [ $? -ne 0 ]; do
+      sleep 1
+      check_proc
+    done
+    rm -f /var/lock/subsys/selenium
+    success && echo
+  else
+    failure "Selenium is not running"
+    echo && exit 1
+  fi
+}
+
+check_proc() {
+  pgrep -u $SELENIUM_USER -f $SELENIUM_JAR >/dev/null
+}
+
+start_daemon() {
+  eval "$*"
+}
+
+case "$1" in
+  start)
+    start
+  ;;
+  stop)
+    stop
+  ;;
+  status)
+    check_proc
+    if [ $? -eq 0 ]; then
+      echo "Selenium is running"
+    else
+      echo "Selenium is not running"
+      exit 1
+    fi
+  ;;
+  restart)
+    stop
+    start
+  ;;
+  reload)
+    stop
+    start
+  ;;
+  *)
+    echo "Usage: <servicename> {start|stop|status|reload|restart"
+    exit 1
+  ;;
+esac
+

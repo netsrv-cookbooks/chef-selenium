@@ -1,3 +1,3 @@
-maintainer 'Andrey Trubachev'
-maintainer_email 'd3rp@yandex.ru'
-version '0.1'
+maintainer 'Colin Woodcock'
+maintainer_email 'enquiries@netsrv-consulting.com'
+version '0.2.0'

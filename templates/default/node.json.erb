@@ -1,6 +1,7 @@
 {
     "capabilities":
         [
+<% if node.recipes.include?("selenium::firefox") %>
             {
                 "browserName": "firefox",
                 "version": "<%= @ffversion %>",
@@ -8,6 +9,8 @@
                 "seleniumProtocol": "WebDriver",
                 "platform": "LINUX"
             },
+<% end %>
+<% if node.recipes.include?("selenium::opera") %>
             {
                 "browserName": "opera",
                 "version": "<%= @operaversion %>",
@@ -15,6 +18,8 @@
                 "seleniumProtocol": "WebDriver",
                 "platform": "LINUX"
             },
+<% end %>
+<% if node.recipes.include?("selenium::opera") %>
             {
                 "browserName": "chrome",
                 "version": "<%= @chromeversion %>",
@@ -22,6 +27,7 @@
                 "seleniumProtocol": "WebDriver",
                 "platform": "LINUX"
             },
+<% end %>
             {
                 "browserName": "htmlunit",
                 "version": "<%= @htmlunitversion %>",
@@ -35,6 +41,8 @@
             "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
             "maxSession": 5,
             "register": true,
-            "registerCycle": 5000
+            "registerCycle": 5000,
+            "hubPort": <%= @hubPort %>,
+            "hubHost": "<%= @hubHost %>"
         }
 }
