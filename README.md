@@ -1,4 +1,4 @@
-## Usage
+# Usage
 
 On the instance that will be the hub, apply the `selenium::hub` recipe.
 
@@ -6,7 +6,7 @@ On the Selenium nodes, apply one or more of selenium::firefox, selenium::opera a
 
 Note: hub and nodes cannot coexist on the same machine.
 
-### Choosing the hub to register the node with
+## Choosing the hub to register the node with
 
 This is controlled by the `['selenium']['hub']['host']` and `['selenium']['hub']['port']` attributes on the node.
 
@@ -14,7 +14,7 @@ Therefore you could set them directly at launch, via a role, or perhaps by a rec
 
 If the attribute `['selenium']['hub']['host']` is not configured the recipe will raise an exception.
 
-## Attributes
+# Attributes
 
 | Attribute                                 | Description                          | Default
 | ----------------------------------------- | ------------------------------------ | -------
@@ -45,7 +45,15 @@ If the attribute `['selenium']['hub']['host']` is not configured the recipe will
 ['selenium']['opera']['maxInstances']       | Number of Opera instances            | 5
 ['selenium']['htmlunit']['maxInstances']    | Number of HtmlUnit instances         | 5
 
-## License and Authors
+# Contributing
+
+* Fork it
+* Create your feature branch (git checkout -b my-new-feature)
+* Commit your changes (git commit -am 'Add some feature')
+* Push to the branch (git push origin my-new-feature)
+* Create new Pull Request
+
+# License and Authors
 Cookbook forked from https://github.com/yandex-qatools/chef-selenium (2936bbea4d).
 
 Modifications by:
